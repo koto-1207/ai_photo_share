@@ -1,1 +1,24 @@
 .venv/
+
+# 秘密情報
+.env
+
+# Pythonのキャッシュ
+__pycache__/
+*.pyc
+
+# SQLiteのDB
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Flask
+instance/
+
+# テスト（pytestを入れたとき用）
+.pytest_cache/
+
+# ユーザーが投稿した画像
+uploads/*
+!uploads/.gitkeep
