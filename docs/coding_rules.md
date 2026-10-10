@@ -3,10 +3,12 @@
 ## ファイルの役割
 | ファイル | 書くもの | 書かないもの |
 |---|---|---|
-| `app.py` | アプリの設定、Flask-Login の設定、すべてのルート | モデル、フォームの定義 |
+| `app.py` | Flaskアプリの作成、Flask-Login の設定、すべてのルート | 設定値、モデル、フォームの定義 |
+| `config.py` | 設定値（`SECRET_KEY`、DBのパス、`UPLOAD_FOLDER`、`MAX_CONTENT_LENGTH`） | 処理 |
 | `models.py` | DB接続、PeeWeeのモデル | Flaskのルート |
 | `forms.py` | Flask-WTFのフォームとバリデータ | DBへの保存処理 |
-| `templates/*.html` | 表示 | 複雑な処理 |
+| `templates/base.html` | 共通レイアウト | 画面ごとの内容 |
+| `templates/posts/*.html` `templates/auth/*.html` | 各画面の表示 | 複雑な処理 |
 | `static/css/style.css` | 自作のCSS | 投稿画像 |
 | `uploads/` | ユーザーが投稿した画像だけ | それ以外のファイル |
 
@@ -17,8 +19,9 @@
 - リンクとリダイレクトには必ず `url_for()` を使う（URLを直接書かない）
 
 ## 設定
+- 設定値は `config.py` の `Config` クラスにまとめ、`app.py` で `app.config.from_object(Config)` で読み込む
 - `SECRET_KEY` は `.env` から読む（`os.environ`）。コードに直接書かない
-- 画像の保存先は、`app.py` があるフォルダを基準にした絶対パスで指定する
+- 画像の保存先は、`config.py` があるフォルダを基準にした絶対パスで指定する
   - 例: `UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")`
 - 投稿画像の保存先は **プロジェクト直下の `uploads/`**。`static/` には保存しない
 - `MAX_CONTENT_LENGTH = 5 * 1024 * 1024`

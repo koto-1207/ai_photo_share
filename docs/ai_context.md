@@ -16,10 +16,14 @@
 
 ```
 ai_photo_share/
-├── app.py            Flaskアプリ本体。ルートはすべてここに書く
+├── app.py            Flaskアプリを作成し、URLと画面をつなぐ。ルートはすべてここに書く
+├── config.py         設定値をまとめる（SECRET_KEY、DBのパス、uploads/ のパスなど）
 ├── models.py         PeeWeeのモデルとDB接続
-├── forms.py          Flask-WTFのフォーム
-├── templates/        Jinja2テンプレート（base.html を継承する）
+├── forms.py          Flask-WTFのフォーム（T3 から）
+├── templates/
+│   ├── base.html     共通レイアウト
+│   ├── posts/        投稿の画面（index / detail / new）
+│   └── auth/         認証の画面（login / register）
 ├── static/css/       自作のCSS（style.css）だけを置く
 ├── uploads/          ユーザーが投稿した画像の保存先（プロジェクト直下）
 ├── docs/             設計資料

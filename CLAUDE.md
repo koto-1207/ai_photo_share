@@ -17,5 +17,5 @@
 
 ## 起動
 ```
-flask --app app run --debug
+python app.py   # http://localhost:8000 で開く
 ```

@@ -2,19 +2,23 @@
 
 - 上から順に、1回に1タスクずつ実装する
 - 完成の条件をすべて満たしたら `[x]` にする
-- 起動コマンドは `flask --app app run --debug`
+- 起動コマンドは `python app.py`（http://localhost:8000 で開く）
 
 ## フェーズ1: 準備
 
-### T1. アプリの土台
-- 作るもの: `app.py`（`/` で仮の文字を表示）、`.env.example`、`templates/base.html`、`static/css/style.css`
-- `.env` から `SECRET_KEY` を読み込む
+### T1. アプリの土台（最小版）
+- 作るもの:
+  - `app.py`: `config.py` を読み込み、`/`（index）で `posts/index.html` を表示する
+  - `config.py`: `SECRET_KEY`（`.env` から読む）、DBファイルのパス
+  - `models.py`: DB接続の設定だけ。テーブルはまだ定義しない
+  - `templates/base.html`、`templates/posts/index.html`（「写真共有アプリ」と表示する仮画面）
+  - `.env.example`
 - 完成の条件:
-  - [ ] `flask --app app run --debug` で起動し、`/` が表示される
+  - [ ] `python app.py` で起動し、`/` に「写真共有アプリ」と表示される
   - [ ] `SECRET_KEY` がコードに直接書かれていない
 
-### T2. DB接続と User モデル
-- 作るもの: `models.py`（DB接続、User モデル）。起動時に `create_tables([User])` を呼ぶ
+### T2. User モデル
+- 作るもの: `models.py` に User モデルを追加する。起動時に `create_tables([User])` を呼ぶ
 - [database.md](database.md) の 3-1 と 4 の注意点に従う
 - 完成の条件:
   - [ ] 起動すると `app.db` が作られ、User テーブルがある
@@ -23,7 +27,7 @@
 ## フェーズ2: ユーザー
 
 ### T3. ユーザー登録
-- 作るもの: `forms.py`（RegisterForm）、`/register`（GET / POST）、`register.html`
+- 作るもの: `forms.py`（RegisterForm）、`/register`（GET / POST）、`auth/register.html`
 - 入力ルールは [requirements.md](requirements.md) の「8. 入力ルール」に従う
 - 登録に成功したら、まだ一覧へは移動せず、flashメッセージを表示する（自動でログインする処理は T4 で作る）
 - 完成の条件:
@@ -31,7 +35,7 @@
   - [ ] ユーザー名の重複（大文字と小文字の違いも含む）、メールアドレスの重複、形式エラー、パスワードの不一致で、それぞれエラーが表示される
 
 ### T4. ログイン / ログアウト
-- 作るもの: Flask-Login の設定（User に `UserMixin` を継承させる、`user_loader` を作る）、LoginForm、`/login`、`/logout`（POST）、`login.html`
+- 作るもの: Flask-Login の設定（User に `UserMixin` を継承させる、`user_loader` を作る）、LoginForm、`/login`、`/logout`（POST）、`auth/login.html`
 - 共通ヘッダーをログイン状態で切り替える（[screens.md](screens.md) の「共通ヘッダー」）
 - 登録に成功したら自動でログインし、`index` へ移動するように T3 を直す
 - 完成の条件:
@@ -50,7 +54,7 @@
   - [ ] `uploads/` フォルダがプロジェクト直下にある
 
 ### T6. 投稿作成
-- 作るもの: PostForm、`/posts/new`（GET / POST、`@login_required`）、`post_new.html`、`/uploads/<filename>`
+- 作るもの: PostForm、`/posts/new`（GET / POST、`@login_required`）、`posts/new.html`、`/uploads/<filename>`
 - 画像は、名前を UUID に作り直してから、**プロジェクト直下の `uploads/` に保存する**。DBにはファイル名だけを保存する
 - `MAX_CONTENT_LENGTH` を5MBにする。Pillow の `verify()` で画像かどうかを確認する
 - DBへの保存に失敗したら、保存した画像ファイルを削除する
@@ -60,13 +64,13 @@
   - [ ] 写真なし、jpg / png 以外、偽の画像、5MB超えでエラーが表示される
 
 ### T7. 投稿一覧
-- `/` を投稿一覧にする（`index.html`）。JOINを使って新しい順に取得する
+- `/` を投稿一覧にする（`posts/index.html`）。JOINを使って新しい順に取得する
 - 完成の条件:
   - [ ] 写真、キャプション、投稿者名、投稿日時が新しい順に表示される
   - [ ] 投稿が0件のときに「まだ投稿がありません」と表示される
 
 ### T8. 投稿詳細
-- 作るもの: `/posts/<int:post_id>`、`post_detail.html`
+- 作るもの: `/posts/<int:post_id>`、`posts/detail.html`
 - 完成の条件:
   - [ ] 一覧の投稿をクリックすると詳細が表示される
   - [ ] 存在しないIDだと404になる
