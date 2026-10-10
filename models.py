@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from flask_login import UserMixin
 from peewee import CharField, DateTimeField, ForeignKeyField, Model, SqliteDatabase
 
 from config import Config
@@ -13,7 +14,8 @@ class BaseModel(Model):
         database = db
 
 
-class User(BaseModel):
+# UserMixin を継承すると、Flask-Login が必要とする is_authenticated などが使えるようになる
+class User(UserMixin, BaseModel):
     username = CharField(max_length=30, unique=True)
     email = CharField(max_length=255, unique=True)
     password_hash = CharField(max_length=255)

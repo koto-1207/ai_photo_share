@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}ユーザー登録 | 写真共有アプリ{% endblock %}
+
+{% block content %}
+  <h1>ユーザー登録</h1>
+
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+
+    {% for field in [form.username, form.email, form.password, form.password_confirm] %}
+      <p>
+        {{ field.label }}<br>
+        {{ field() }}
+        {% for error in field.errors %}
+          <br><span>{{ error }}</span>
+        {% endfor %}
+      </p>
+    {% endfor %}
+
+    <p>{{ form.submit() }}</p>
+  </form>
+
+  <p><a href="{{ url_for('login') }}">ログインはこちら</a></p>
+{% endblock %}
